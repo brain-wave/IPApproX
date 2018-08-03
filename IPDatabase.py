@@ -48,6 +48,10 @@ def load_ips_list(filename):
     for i in ips_list.keys():
         commit = ips_list[i]['commit']
         try:
+            remote = ips_list[i]['remote']
+        except KeyError:
+            remote = None
+        try:
             domain = ips_list[i]['domain']
         except KeyError:
             domain = None
@@ -61,7 +65,7 @@ def load_ips_list(filename):
             alternatives = list(set.union(set(ips_list[i]['alternatives']), set([name])))
         except KeyError:
             alternatives = None
-        ips.append({'name': name, 'commit': commit, 'group': group, 'path': path, 'domain': domain, 'alternatives': alternatives })
+        ips.append({'name': name, 'remote': remote, 'commit': commit, 'group': group, 'path': path, 'domain': domain, 'alternatives': alternatives })
     return ips
 
 def store_ips_list(filename, ips):
@@ -244,11 +248,12 @@ class IPDatabase(object):
                 os.chdir("./")
 
                 print(tcolors.OK + "\nCloning ip '%s'..." % ip['name'] + tcolors.ENDC)
-
-                if group and ip['group']:
-                    ip['remote'] = "%s:%s" % (server, ip['group'])
-                else:
-                    ip['remote'] = remote
+                
+                if ip.get('remote') is None:
+                    if group and ip['group']:
+                        ip['remote'] = "%s:%s" % (server, ip['group'])
+                    else:
+                        ip['remote'] = remote
 
                 print(ip['remote'])
 
