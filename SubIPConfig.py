@@ -125,7 +125,7 @@ class SubIPConfig(object):
             defines = "%s +define+%s" % (defines, d)
         for f in files:
             if not is_vhdl(f):
-                vlog_cmd += VSIM_VLOG_CMD % ("%s %s %s" % (more_opts, self.vlog_opts, defines), vlog_includes, "%s/%s" % (abs_path, f))
+                vlog_cmd += VSIM_VLOG_CMD % ("%s %s %s" % (more_opts, self.vlog_opts, defines), abs_path, "%s/%s" % (abs_path, f))
             else:
                 vlog_cmd += VSIM_VCOM_CMD % ("%s %s" % (more_opts, self.vcom_opts), "%s/%s" % (abs_path, f))
         return vlog_cmd
